@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core Palette */
+  --color-primary: #0040a1;
+  --color-primary-container: #0056d2;
+  --color-secondary: #006b5e;
+  --color-secondary-container: #94f0df;
+  --color-on-secondary-container: #006f62;
+  --color-tertiary: #822800;
+  --color-error: #ba1a1a;
+
+  /* Surface Architecture (The "No-Line" Rule) */
+  --color-surface: #faf8ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f3fe;
+  --color-surface-container-high: #e7e7f2;
+  --color-surface-container-highest: #dcdceb;
+
+  /* Text & Outlines */
+  --color-on-surface: #191b23;
+  --color-on-surface-variant: #424654;
+  --color-outline-variant: rgba(195, 198, 214, 0.2);
+
+  /* Typography - Linking to Next.js Font Variables */
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+
+  /* Elevation & Depth */
+  --shadow-tonal-lift: 0 10px 32px -4px rgba(0, 64, 161, 0.06);
+  
+  /* Radii */
+  --radius-xl: 0.75rem;
+}
+
+/* Custom Utility for your Signature Polish Gradient */
+@utility primary-gradient {
+  background: linear-gradient(135deg, #0040a1 0%, #0056d2 100%);
+}
+
+/* Global Reset to apply your "Digital Curator" base */
+@layer base {                                                           
+  body {
+    @apply bg-surface text-on-surface antialiased font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
