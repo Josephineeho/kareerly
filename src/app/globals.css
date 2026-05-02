@@ -9,6 +9,8 @@
   --color-on-secondary-container: #006f62;
   --color-tertiary: #822800;
   --color-error: #ba1a1a;
+  --color-muted: #6b7280;
+  --color-text-muted: #6b7280;
 
   /* Surface Architecture (The "No-Line" Rule) */
   --color-surface: #faf8ff;
