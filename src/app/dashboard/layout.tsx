@@ -14,7 +14,7 @@ import {
   UserCircle2,
 } from "lucide-react";
 import Image from "next/image";
-import { dummyUser } from "@/dummy-data";
+import { dummyUser } from "../../dummy-data";
 import Link from "next/link";
 import NavBar from "../components/UI/NavBar";
 import { usePathname } from "next/navigation";
