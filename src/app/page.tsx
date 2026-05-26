@@ -5,6 +5,7 @@ import Hero from "./components/Home/Hero";
 import Companies from "./components/Home/Companies"
 import UserTypes from "./components/Home/UserTypes";
 import {  BriefcaseBusiness, GraduationCap, MoveRight, Search } from 'lucide-react'
+import ColorStyleGuide from "./components/ColorGuide";
   
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <NavBar/>
+      <ColorStyleGuide/>
       <Hero/>
       <Companies />
       <div className="usertypes grid grid-cols-1 md:grid-cols-2 gap-5">

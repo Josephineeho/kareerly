@@ -37,7 +37,7 @@ function Hero() {
     <div className='p-9 flex justify-center items-center'>
       <div className="section1 flex-1">
         <h1 className='font-bold text-6xl mt-10 tracking-tighter'>Connect with Your <span className='text-primary '> Future Career</span></h1>
-        <p className='text-lg mt-10'>Discover exclusive internship opportunities and high-impact roles at the world's most innovative companies. Curated for the next generation of architects. </p>
+        <p className='text-lg mt-10'>Discover exclusive internship opportunities and high-impact roles at the world&apos;s most innovative companies. Curated for the next generation of architects. </p>
         <div className="cta flex mt-10 ">
           <div className="action1 shadow-lg  flex items-center bg-surface-container-low  rounded gap-2 border border-slate-300">
             <Search className='text-muted m-2' />
