@@ -1,7 +1,7 @@
 "use server"
 import { createClient } from "../utils/supabase/server";
-
-export async function signIn(email: string, password: string) {
+import { SignUpProps } from "../types"; 
+export async function login(email: string, password: string) {
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -16,19 +16,22 @@ export async function signIn(email: string, password: string) {
     return { data };
 }
 
-export async function signUp(email: string, password: string, fullName: string, role: string) {
+export async function signUp() {
     const supabase = await createClient();
-    console.log(email, password,fullName,role)
-    if (!email || !password || !fullName || !role) {
+    console.log(email, password, full_name, role, company_name, industry);
+    if (!email || !password || !full_name || !role) {
         return { error: "All fields are required" };
     }
+
     const { data, error } = await supabase.auth.signUp({
         email, 
         password,
         options: {
             data: {
-                full_name: fullName,
+                full_name: full_name,
                 role: role,
+                company: company_name,
+                industry: industry
             }
         }
     });

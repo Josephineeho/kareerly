@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Input from '../components/UI/Input';
 import { InfoIcon } from 'lucide-react';
 import Button from '../components/UI/Button';
+import { useRouter } from 'next/navigation';
 
 const name: "openair" | "sms" = "openair";
 
@@ -13,19 +14,38 @@ function page() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [fullName, setFullName] = React.useState('');
-  const [role, setRole] = React.useState('job_seeker');
-  const [loading, setLoading] = React.useState(false);
-  const [activeTab, setActiveTab] = useState<"job_seeker" | "employer">("job_seeker");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
+
+  // Employer fields
+  const [employerEmail, setEmployerEmail] = React.useState('');
+  const [employerPassword, setEmployerPassword] = React.useState('');
+  const [employerFullName, setEmployerFullName] = React.useState('');
+  const [employerConfirmPassword, setEmployerConfirmPassword] = useState("");
+  const [employerCompanyName, setEmployerCompanyName] = useState("")
+  const [employerIndustry, setEmployerIndustry] = useState("")
+
+  const [role, setRole] = React.useState('seeker');
+  const [loading, setLoading] = React.useState(false);
+  const [activeTab, setActiveTab] = useState<"seeker" | "employer">("seeker");
+  const router = useRouter();
   const activeTabStyle = "bg-white text-primary font-bold rounded-full";
 
-  const handleSignUp = async (email: string, password: string, fullName: string, role: string) => {
+  const handleSignUp = async () => {
     setLoading(true);
-    const data = await signUp(email, password, fullName, role);
-    console.log(data);
-    setLoading(false);
-  }
+    if (role == "seeker"){
+     const signUpResult = await signUp(email, password, fullName, role)
+     if(signUpResult.error){
+      console.log()
+    }else{
+      router.push("/dashboard")
+    }
 
+    } else{
+      const signUpResult = await signUp(employerCompanyName, employerEmail, employerFullName, employerIndustry, employerPassword)
+    }
+    
+  }
   return (
     <div className='w-screen shadow-2xl h-screen flex p-5 '>
       <div className="section1 overflow-y-hidden rounded-2xl flex-1 hidden sm:flex sm:flex-col justify-center bg-primary text-white p-5" >
@@ -48,28 +68,28 @@ function page() {
         <p className='text-text-muted'>step into a curated career experience.</p>
         <div className="toggle bg-surface-container-highest my-5 rounded-full p-1 flex w-full items-center">
 
-          <div onClick={() => setActiveTab("job_seeker")} className={`job-seeker cursor-pointer  ${activeTab == "job_seeker" && activeTabStyle} flex-1 text-center`}>Job Seeker</div>
+          <div onClick={() => setActiveTab("seeker")} className={`job-seeker cursor-pointer  ${activeTab == "seeker" && activeTabStyle} flex-1 text-center`}>Job Seeker</div>
           <div onClick={() => setActiveTab("employer")} className={`employer flex-1 text-center cursor-pointer ${activeTab == "employer" && activeTabStyle}`}>Employer</div>
         </div>
         <div className={`employee-form ${activeTab == "employer" && 'hidden'}`}>
-          <Input label='Full Name' onChange={(e) => { }} value='' type='string' placeholder='John Doe' />
-          <Input label='Email Address' onChange={(e) => { }} value='' type='email' placeholder='john.doe@example.com' />
-          <Input label='Password' onChange={(e) => { }} value='' type='password' placeholder='••••••••' />
-          <Input label='Confirm Password' onChange={(e) => { }} value='' type='password' placeholder='••••••••' />
+          <Input label='Full Name' onChange={(e) => {setFullName(e) }} value={fullName} type='string' placeholder='John Doe' />
+          <Input label='Email Address' onChange={(e) => { setEmail(e)}} value={email} type='email' placeholder='john.doe@example.com' />
+          <Input label='Password' onChange={(e) => {setPassword(e) }} value={password} type='password' placeholder='••••••••' />
+          <Input label='Confirm Password' onChange={(e) => {setConfirmPassword(e) }} value={confirmPassword} type='password' placeholder='••••••••' />
 
         </div>
-        <div className={`employers-form ${activeTab == "job_seeker" && 'hidden'}`}>
-          <Input label='Full Name' onChange={(e) => { }} value='' type='string' placeholder='John Doe' />
-          <Input label='Company Name' onChange={(e) => { }} value='' type='string' placeholder='Acme Inc.' />
-          <Input label='Work Email' onChange={(e) => { }} value='' type='email' placeholder='john.doe@example.com' />
-          <Input label='Industry' onChange={(e) => { }} value='' type='string' placeholder='Technology' />
-          <Input label='Password' onChange={(e) => { }} value='' type='password' placeholder='••••••••' />
-          <Input label='Confirm Password' onChange={(e) => { }} value='' type='password' placeholder='••••••••' />
+        <div className={`employers-form ${activeTab == "seeker" && 'hidden'}`}>
+          <Input label='Full Name' onChange={(e) => { setEmployerFullName(e)}} value={employerFullName} type='string' placeholder='John Doe' />
+          <Input label='Company Name' onChange={(e) => { setEmployerCompanyName(e)}} value={employerCompanyName} type='string' placeholder='Acme Inc.' />
+          <Input label='Work Email' onChange={(e) => { setEmployerEmail(e)}} value={employerEmail} type='email' placeholder='john.doe@example.com' />
+          <Input label='Industry' onChange={(e) => { setEmployerIndustry(e)}} value={employerIndustry} type='string' placeholder='Technology' />
+          <Input label='Password' onChange={(e) => { setEmployerPassword(e)}} value={employerPassword} type='password' placeholder='••••••••' />
+          <Input label='Confirm Password' onChange={(e) => { setEmployerConfirmPassword(e)}} value={employerConfirmPassword} type='password' placeholder='••••••••' />
 
         </div>
         <p className='flex gap-2 items-center text-sm text-text-muted'><InfoIcon size={16} /> At least 8 characters with a number and a symbol.</p>
         <p className='my-6 text-sm text-text-muted'> <input type="checkbox" /> I agree to the <Link href='/terms' className='text-primary font-bold'>Terms of Service</Link> and <Link className='text-primary font-bold' href='/privacy'>Privacy Policy</Link>. </p>
-        <Button variant='primary' onclick={() => { handleSignUp(email, password, fullName, role) }} >Create Account</Button>
+        <Button variant='primary' onclick={() => { handleSignUp(email, password, fullName, role, company_name) }} >Create Account</Button>
         <p className='text-center m-3 font-bold text-text-muted'>or continue with</p>
         <div className="socials-login flex justify-center gap-10">
           <Button variant='ghost'>

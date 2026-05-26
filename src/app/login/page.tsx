@@ -1,11 +1,36 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link';
-import { Eye, ShieldCheck } from 'lucide-react';
+import { Eye, Loader, ShieldCheck } from 'lucide-react';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
+import { login } from '@/services/auth';
+import { useRouter } from 'next/navigation';
+
 
 function Login() {
+  const router = useRouter();
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("")
+  const [loading, setLoading ] = useState(false);
+
+
+  const authenticateUser = async ()=>{
+    setLoading(true)
+    if (email == "" || password ==""){
+      return;
+    } else{
+     const loginResults = await login(email, password);
+     if (loginResults.error){
+      console.log(loginResults.error)
+     } else{
+        router.push("/dashboard");
+     }
+     
+    }
+     setLoading(false) 
+  }
+
   return (
     <div className='shadow p-5 w-screen rounded-lg flex justify-center items-center h-screen'>
       <div className="section1 flex-1 rounded-l-lg shadow-lg hidden sm:flex flex-col justify-center h-full gap-5 p-3 bg-primary text-white">
@@ -33,14 +58,15 @@ function Login() {
           </Button>
         </div>
         <p className='font-bold text-xs text-center'>OR LOGIN WITH EMAIL</p>
-        <Input label="ENTER EMAIL" type='email' placeholder='example@gmail.com' value='' onChange={(e) => { }}></Input>
-        <Input label="ENTER PASSWORD" type='password' placeholder='..........' value='' onChange={(e) => { }}>
+        <Input label="ENTER EMAIL" type='email' placeholder='example@gmail.com' value={email} onChange={(e)=>setEmail(e)}></Input>
+        <Input label="ENTER PASSWORD" type='password' placeholder='..........' value={password} onChange={(e) =>setPassword(e)}>
         </Input>
-        <Button variant={'primary'}>Login</Button>
+        <Button onclick={()=>{authenticateUser()}} variant={'primary'}>{ loading ? <Loader className='animate-spin'/> : "Login"}</Button>
         <p className='text-center'>Don't have an account yet? <Link href={'/signup'}><span className='text-primary underline '>create one</span></Link></p>
       </div>
     </div>
   )
 }
+
 
 export default Login
