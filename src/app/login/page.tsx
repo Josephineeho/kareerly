@@ -6,6 +6,7 @@ import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 import { login } from '@/services/auth';
 import { useRouter } from 'next/navigation';
+import { error } from 'console';
 
 
 function Login() {
@@ -13,23 +14,29 @@ function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("")
   const [loading, setLoading ] = useState(false);
+  
+
+  const [formError, setFormError] = useState("")
 
 
   const authenticateUser = async ()=>{
     setLoading(true)
     if (email == "" || password ==""){
-      return;
+      setFormError("All fields are required");
     } else{
      const loginResults = await login(email, password);
      if (loginResults.error){
-      console.log(loginResults.error)
+      setFormError(loginResults.error)
      } else{
         router.push("/dashboard");
      }
+     setLoading(false)
      
     }
      setLoading(false) 
   }
+
+
 
   return (
     <div className='shadow p-5 w-screen rounded-lg flex justify-center items-center h-screen'>
@@ -61,6 +68,7 @@ function Login() {
         <Input label="ENTER EMAIL" type='email' placeholder='example@gmail.com' value={email} onChange={(e)=>setEmail(e)}></Input>
         <Input label="ENTER PASSWORD" type='password' placeholder='..........' value={password} onChange={(e) =>setPassword(e)}>
         </Input>
+        {formError? <p className='text-error font-bold'>{formError}</p>: ""}
         <Button onclick={()=>{authenticateUser()}} variant={'primary'}>{ loading ? <Loader className='animate-spin'/> : "Login"}</Button>
         <p className='text-center'>Don't have an account yet? <Link href={'/signup'}><span className='text-primary underline '>create one</span></Link></p>
       </div>

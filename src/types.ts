@@ -4,7 +4,7 @@ export interface HeroSidePicProps {
     description: string
 }
 
-export interface SignUpProps {
+export interface  SignUpEmployer{
     full_name: string;
     password: string;
     email: string;
@@ -12,4 +12,9 @@ export interface SignUpProps {
     company_name?: string;
     industry?: string;
 }
-
+export type SignUpJobSeeker ={
+    full_name: string;
+    email: string;
+    password: string;
+    role:string;
+}

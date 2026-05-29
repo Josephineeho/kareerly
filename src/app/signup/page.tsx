@@ -1,19 +1,18 @@
 "use client"
 import React, { useState } from 'react'
-import { signUp } from "../../services/auth";
+import { signUpEmployer, signUpJobSeeker } from '@/services/auth';
 import Link from 'next/link';
 import Input from '../components/UI/Input';
-import { InfoIcon } from 'lucide-react';
+import { InfoIcon, Loader } from 'lucide-react';
 import Button from '../components/UI/Button';
 import { useRouter } from 'next/navigation';
 
-const name: "openair" | "sms" = "openair";
-
 
 function page() {
+
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [fullName, setFullName] = React.useState('');
+  const [full_name, setFullName] = React.useState('');
   const [confirmPassword, setConfirmPassword] = useState("");
 
 
@@ -25,33 +24,43 @@ function page() {
   const [employerCompanyName, setEmployerCompanyName] = useState("")
   const [employerIndustry, setEmployerIndustry] = useState("")
 
-  const [role, setRole] = React.useState('seeker');
-  const [loading, setLoading] = React.useState(false);
+  const [role, setRole] = React.useState("seeker");
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"seeker" | "employer">("seeker");
   const router = useRouter();
   const activeTabStyle = "bg-white text-primary font-bold rounded-full";
 
-  const handleSignUp = async () => {
-    setLoading(true);
-    if (role == "seeker"){
-     const signUpResult = await signUp(email, password, fullName, role)
-     if(signUpResult.error){
-      console.log()
-    }else{
-      router.push("/dashboard")
-    }
+  const [formError, setFormError] = useState<string>("")
 
-    } else{
-      const signUpResult = await signUp(employerCompanyName, employerEmail, employerFullName, employerIndustry, employerPassword)
-    }
-    
+  const handleSignUpJobSeeker = async () => {
+    setLoading(true);
+    const {data, error} = await signUpJobSeeker({ full_name, email, password, role});
+    if(error){
+     setFormError(error)
+        }else {
+          router.push("/dashboard")
+        }
+        setLoading(false)
   }
+
+  const handleSignUpEmployer = async () => {
+    setLoading(true);
+    const {data, error} = await signUpEmployer({email: employerEmail, password: employerPassword, full_name: employerFullName, role, company_name: employerCompanyName, industry: employerIndustry })
+  if(error){
+    setFormError(error);
+  }else {
+    router.push("/dashboard")
+  }
+  setLoading(false);
+  }
+  
+
   return (
     <div className='w-screen shadow-2xl h-screen flex p-5 '>
       <div className="section1 overflow-y-hidden rounded-2xl flex-1 hidden sm:flex sm:flex-col justify-center bg-primary text-white p-5" >
         <Link className='mb-10 font-bold text-2xl' href={"/"}>Kareerly</Link>
         <h1 className='text-5xl tracking-tighter  font-bold'>Design your professional future with editorial precision.</h1>
-        <p className='mt-5 text-sm'>Join an elite network of talent and industry leaders. Wheter you're seeking your next milestone or building a world-class team, start here.</p>
+        <p className='mt-5 text-sm'>Join an elite network of talent and industry leaders. Whether you're seeking your next milestone or building a world-class team, start here.</p>
         <div className="stats flex justify-center gap-2 md:gap-10 mt-8">
           <div className="stats1 flex-1 bg-white/20 rounded p-2">
             <h3 className='font-bold text-2xl'>1K+</h3>
@@ -72,7 +81,7 @@ function page() {
           <div onClick={() => setActiveTab("employer")} className={`employer flex-1 text-center cursor-pointer ${activeTab == "employer" && activeTabStyle}`}>Employer</div>
         </div>
         <div className={`employee-form ${activeTab == "employer" && 'hidden'}`}>
-          <Input label='Full Name' onChange={(e) => {setFullName(e) }} value={fullName} type='string' placeholder='John Doe' />
+          <Input label='Full Name' onChange={(e) => {setFullName(e) }} value={full_name} type='string' placeholder='John Doe' />
           <Input label='Email Address' onChange={(e) => { setEmail(e)}} value={email} type='email' placeholder='john.doe@example.com' />
           <Input label='Password' onChange={(e) => {setPassword(e) }} value={password} type='password' placeholder='••••••••' />
           <Input label='Confirm Password' onChange={(e) => {setConfirmPassword(e) }} value={confirmPassword} type='password' placeholder='••••••••' />
@@ -89,7 +98,9 @@ function page() {
         </div>
         <p className='flex gap-2 items-center text-sm text-text-muted'><InfoIcon size={16} /> At least 8 characters with a number and a symbol.</p>
         <p className='my-6 text-sm text-text-muted'> <input type="checkbox" /> I agree to the <Link href='/terms' className='text-primary font-bold'>Terms of Service</Link> and <Link className='text-primary font-bold' href='/privacy'>Privacy Policy</Link>. </p>
-        <Button variant='primary' onclick={() => { handleSignUp(email, password, fullName, role, company_name) }} >Create Account</Button>
+        
+        {formError && <p className='text-error font-bold mb-2'>{formError}</p>}
+        <Button variant='primary' onclick={() => {activeTab == "seeker" ? handleSignUpJobSeeker(): handleSignUpEmployer()  }} >{loading? <Loader className='animate-spin'/>: "Create Account"}</Button>
         <p className='text-center m-3 font-bold text-text-muted'>or continue with</p>
         <div className="socials-login flex justify-center gap-10">
           <Button variant='ghost'>
