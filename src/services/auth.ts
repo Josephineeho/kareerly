@@ -1,10 +1,12 @@
 "use server"
 import { createClient } from "../utils/supabase/server";
 import { SignUpEmployer, SignUpJobSeeker } from "../types";
-import { error } from "console";
+
 export async function login(email: string, password: string) {
     const supabase = await createClient();
-
+    if (!email || !password) {
+        return { data: {}, error: "All fields are required" };
+    }
     const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -61,42 +63,42 @@ export async function signUpEmployer({ email, password, full_name, role, company
     }
 }
 
-    export async function signOut() {
-        const supabase = await createClient();
+export async function signOut() {
+    const supabase = await createClient();
 
-        const { error } = await supabase.auth.signOut();
+    const { error } = await supabase.auth.signOut();
 
-        if (error) {
-            return { error: error.message };
-        }
-
-        return { data: "Signed out successfully" };
+    if (error) {
+        return { error: error.message };
     }
 
-    export async function signInWithGoogle() {
-        const supabase = await createClient();
+    return { data: "Signed out successfully" };
+}
 
-        const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: "google",
-        });
+export async function signInWithGoogle() {
+    const supabase = await createClient();
 
-        if (error) {
-            return { error: error.message };
-        }
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+    });
 
-        return { data };
+    if (error) {
+        return { error: error.message };
     }
 
-    export async function signInWithGitHub() {
-        const supabase = await createClient();
+    return { data };
+}
 
-        const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: "github",
-        });
+export async function signInWithGitHub() {
+    const supabase = await createClient();
 
-        if (error) {
-            return { error: error.message };
-        }
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "github",
+    });
 
-        return { data };
+    if (error) {
+        return { error: error.message };
     }
+
+    return { data };
+}
