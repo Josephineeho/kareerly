@@ -25,6 +25,7 @@ function Login() {
     if (loginResults.error) {
       setFormError(loginResults.error);
     } else {
+      if(loginResults.data?.user.role)
       router.push("/dashboard");
     }
     setLoading(false);

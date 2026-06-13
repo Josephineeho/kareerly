@@ -3,7 +3,7 @@ import { createClient } from "./utils/supabase/middleware";
 
 const ROLE_ROUTES: Record<string, string> = {
   "/admin/dashboard": "admin",
-  "/company/dashboard": "company",
+  "/company/dashboard": "employer",
   "/dashboard": "seeker",
 };
 
